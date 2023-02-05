@@ -85,7 +85,6 @@ void MainWindow::on_lightButton_clicked()
     } else {
         ui->lightLabel->setPixmap(light_label_off);
         settings->setValue("light", "false");
-        ui->statusBar->showMessage("Закрыто");
         lightToggle(false);
     }
 }
