@@ -15,13 +15,15 @@ UsbPrintWindow::UsbPrintWindow(QWidget *parent) :
 
     QString sPath = "C:/";
     filesModel = new QFileSystemModel(this);
-    filesModel->setFilter(QDir::NoDotAndDotDot | QDir::Files);
+    filesModel->setFilter(QDir::AllEntries | QDir::NoDot);
     filesModel->setRootPath(sPath);
     ui->listView->setModel(filesModel);
+    ui->listView->setWordWrap(true);
 }
 
 UsbPrintWindow::~UsbPrintWindow()
 {
+    delete filesModel;
     delete ui;
 }
 
@@ -47,7 +49,21 @@ void UsbPrintWindow::changeConnection(bool result)
 
 void UsbPrintWindow::on_listView_clicked(const QModelIndex &index)
 {
+
+
     QString sPath = filesModel->fileInfo(index).absoluteFilePath();
-    ui->listView->setRootIndex(filesModel->setRootPath(sPath));
+    QString ext = filesModel->fileInfo(index).suffix();  // ext = "gz"
+    if (ext == "png")
+    {
+        QString fileName = filesModel -> filePath(index);
+        QPixmap pixmap(fileName);
+
+        ui->imageLabel->setPixmap(pixmap);
+        ui->imageLabel->resize(pixmap.width(), pixmap.height());
+    } else {
+
+        ui->listView->setRootIndex(filesModel->setRootPath(sPath));
+
+    }
 }
 
